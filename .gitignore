@@ -62,12 +62,10 @@ artifacts/
 *.tlh
 *.tmp
 *.tmp_proj
-*.log
 *.vspscc
 *.vssscc
 .builds
 *.pidb
-*.svclog
 *.scc
 
 # Chutzpah Test files
@@ -258,30 +256,3 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/King.Box.AdminWeb/obj/Debug/*.cache
-/King.Box.AdminWeb/obj/Debug/*.txt
-/King.Box.Cache/obj/Debug/*.cache
-/King.Box.DbProvider/obj/Debug/*.cache
-/King.Box.DbProvider/obj/Debug/*.txt
-/King.Box.Install/obj/Debug/*.cache
-/King.Box.Install/obj/Debug/*.txt
-/King.Box.Models/obj/Debug/*.cache
-/King.Box.Owin/obj/Debug/*.cache
-/King.Box.Owin/obj/Debug/*.txt
-/King.Box.Service/obj/Debug/*.cache
-/King.Box.Utils/obj/Debug/*.cache
-/King.Box.Utils/obj/Debug/*.txt
-/King.Box.WebApi/obj/Debug/*.cache
-/King.Box.WebApi/obj/Debug/*.txt
-/SharedProxyPools
-/Zk.HotelPlatform.Service/Fakes/AlipaySDKNet.fakes
-/Zk.HotelPlatform.ThirdModel/TieLv/TieLvHotelPriceListResponse.cs
-/Zk.HotelPlatform.Task/HotelTask.cs
-/Zk.HotelPlatform.Service/ITieLvHotelService.cs
-/Zk.HotelPlatform.Service/Impl/TieLvHotelService.cs
-/Zk.HotelPlatform.OpenApi/Filters/ApiAuthorizeAttribute.cs
-/Zk.HotelPlatform.ExtendCacheProvider/Impl/CtripPriceCacheProvider.cs
-/Zk.HotelPlatform.ExtendCacheProvider/Impl/CityMappingCacheProvider.cs
-/Zk.HotelPlatform.ExtendCacheProvider/ICtripPriceCacheProvider.cs
-/Zk.HotelPlatform.ExtendCacheProvider/ICityMappingCacheProvider.cs
-/Zk.HotelPlatform.QunarApi/implquna
