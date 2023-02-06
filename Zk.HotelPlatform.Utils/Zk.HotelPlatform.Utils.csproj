@@ -164,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AESUtil.cs" />
-    <Compile Include="Baidu\BaiDuHotelConfiguration.cs" />
     <Compile Include="ChineseUtil.cs" />
     <Compile Include="Concurrent\ConcurrentHashSet.cs" />
     <Compile Include="DataSqlBulkCopyUtil.cs" />

@@ -80,6 +80,7 @@
     <Compile Include="Request\SysConfig\SysConfigQueryRequest.cs" />
     <Compile Include="Request\Sys\SysSubUserAddRequest.cs" />
     <Compile Include="Request\Sys\SysSubUserQueryRequest.cs" />
+    <Compile Include="Response\Log\OperationLogResponse.cs" />
     <Compile Include="SysUserIP.cs" />
     <Compile Include="Request\Account\AccountResetPayPwdRequest.cs" />
     <Compile Include="Base\Sys\BaseSysDepartment.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="Request\Sys\SysUserGroupAddRequest.cs" />
     <Compile Include="Request\Sys\SysUserGroupQueryRequest.cs" />
     <Compile Include="Request\Sys\SysUserQueryRequest.cs" />
-    <Compile Include="Response\Log\OperationLogResponse.cs" />
     <Compile Include="Response\Sys\SysMenuResponse.cs" />
     <Compile Include="Response\Sys\SysModuleResponse.cs" />
     <Compile Include="Response\Sys\SysRoleResponse.cs" />
