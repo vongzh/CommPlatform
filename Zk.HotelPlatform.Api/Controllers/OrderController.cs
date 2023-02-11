@@ -26,6 +26,9 @@ namespace Zk.HotelPlatform.Api.Controllers
         [Route("Order/Query")]
         public PageResult<OrderInfo> QueryOrders(QueryOrderRequest queryOrderRequest)
         {
+            if (queryOrderRequest == null)
+                queryOrderRequest = new QueryOrderRequest();
+            
             return this._orderInfoService.QueryOrders(queryOrderRequest);
         }
 
