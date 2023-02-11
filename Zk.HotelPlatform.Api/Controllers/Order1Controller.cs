@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Http;
 using Zk.HotelPlatform.Api.Filters;
 using Zk.HotelPlatform.Model;
@@ -13,17 +12,17 @@ namespace Zk.HotelPlatform.Api.Controllers
     [Authorize(Roles = "Client")]
 #endif
     [ResponseHandler]
-    public class OrderController : BaseController
+    public class Order1Controller : BaseController
     {
         private readonly IOrderInfoService _orderInfoService = null;
-        public OrderController(IOrderInfoService orderInfoService)
+        public Order1Controller(IOrderInfoService orderInfoService)
         {
             _orderInfoService = orderInfoService;
         }
 
         [HttpPost]
         [SysAuthorize]
-        [Route("Order/Query")]
+        [Route("Order1/Query")]
         public PageResult<OrderInfo> QueryOrders(QueryOrderRequest queryOrderRequest)
         {
             if (queryOrderRequest == null)
@@ -34,14 +33,14 @@ namespace Zk.HotelPlatform.Api.Controllers
 
         [HttpPost]
         [SysAuthorize]
-        [Route("Order/Get")]
+        [Route("Order1/Get")]
         public OrderInfo GetOrder(string orderNo)
         {
             return this._orderInfoService.GetOrderInfo(orderNo);
         }
 
         [HttpPost]
-        [Route("Order/Create")]
+        [Route("Order1/Create")]
         public bool CerateOrder(CreateOrderRequest createOrderRequest)
         {
             if (createOrderRequest.Signup == null)
