@@ -78,6 +78,7 @@ namespace Zk.HotelPlatform.Service.Impl
 
             var orderInfo = new OrderInfo()
             {
+                OrderNo = DateTime.Now.Ticks.ToString(),
                 CourseId = course.Id,
                 CourseName = course.CourseName,
                 Duration = course.Duration,
