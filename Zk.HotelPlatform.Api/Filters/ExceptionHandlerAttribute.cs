@@ -31,14 +31,6 @@ namespace Zk.HotelPlatform.Api.Filters
                     LogInfoWriter.GetInstance().Error(actionExecutedContext.Exception.Message, actionExecutedContext.Exception);
                  
                     Console.WriteLine(logContent);
-
-                    Task.Run(() =>
-                    {
-                        using (var client = new HttpClient())
-                        {
-                            client.GetAsync($"https://api.51zhu.cn/WechatWork/Push?title={ Assembly.GetEntryAssembly().GetName() }应用异常&desc=<div class=\"highlight\">{actionExecutedContext.Exception.Message}</div><div class=\"normal\">{ actionExecutedContext.Exception.InnerException?.Message }</div>");
-                        }
-                    });
                 }
             }
 

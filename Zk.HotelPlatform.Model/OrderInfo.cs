@@ -36,12 +36,6 @@ namespace Zk.HotelPlatform.Model
         [StringLength(50)]
         public string UserName { get; set; }
 
-        public DateTime? CreateTime { get; set; }
-
-        public DateTime UpdateTime { get; set; }
-
-        public int? IsDelete { get; set; }
-
         public int? SchemePayNum { get; set; }
 
         public int? PaymentAmount { get; set; }
