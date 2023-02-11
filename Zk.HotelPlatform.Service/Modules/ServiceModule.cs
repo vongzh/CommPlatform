@@ -9,7 +9,10 @@ namespace Zk.HotelPlatform.Service.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            
+
+            builder.RegisterType<CourseService>().As<ICourseService>().SingleInstance();
+
+            builder.RegisterType<SchemeService>().As<ISchemeService>().SingleInstance();
             builder.RegisterType<ThrottleService>().As<IThrottleService>().SingleInstance();
 
             builder.RegisterType<OperationLogService>().As<IOperationLogService>().SingleInstance();

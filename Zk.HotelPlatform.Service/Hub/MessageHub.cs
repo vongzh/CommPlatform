@@ -79,7 +79,7 @@ namespace Zk.HotelPlatform.Service
             var sysUserSession = _sysUserService.GetUserSessionCache(sid);
             if (sysUserSession == null)
             {
-                throw new Exception("连接失败，未知的用户");
+                return Task.FromException(new Exception("连接失败，未知的用户"));
             }
 
             int.TryParse(Context.QueryString[_userId], out int uid);

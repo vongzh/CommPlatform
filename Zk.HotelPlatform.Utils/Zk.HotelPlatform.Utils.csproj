@@ -189,12 +189,7 @@
     <Compile Include="Global\GlobalConfig.cs" />
     <Compile Include="Global\GlobalConst.cs" />
     <Compile Include="Global\GlobalEnum.cs" />
-    <Compile Include="Global\GlobalCtripDirectEnum.cs" />
-    <Compile Include="Global\GlobalMeiTuanDistributionEnum.cs" />
-    <Compile Include="Global\GlobalQunarEnum.cs" />
-    <Compile Include="Global\GlobalOpenApiEnum.cs" />
-    <Compile Include="Global\GlobalGaoDeEnum.cs" />
-    <Compile Include="Global\GlobalXiaoZhuEnum.cs" />
+    <Compile Include="Global\PartalEnum.cs" />
     <Compile Include="Gzip\GZipUtil.cs" />
     <Compile Include="HttpHelpers.cs" />
     <Compile Include="HttpUtil.cs" />

@@ -481,19 +481,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICaptchaService.cs" />
+    <Compile Include="ICourseService.cs" />
     <Compile Include="IDataService.cs" />
     <Compile Include="ILoginLogService.cs" />
     <Compile Include="IMainService.cs" />
     <Compile Include="IMessageService.cs" />
     <Compile Include="Impl\CaptchaService.cs" />
+    <Compile Include="Impl\CourseService.cs" />
     <Compile Include="Impl\DataService.cs" />
     <Compile Include="Impl\LoginLogService.cs" />
     <Compile Include="Impl\MainService.cs" />
     <Compile Include="Impl\OperationLogService.cs" />
+    <Compile Include="Impl\OrderInfoService.cs" />
+    <Compile Include="Impl\SchemeService.cs" />
+    <Compile Include="Impl\SignupService.cs" />
     <Compile Include="Impl\SysUserIPService.cs" />
     <Compile Include="Hub\MessageHub.cs" />
     <Compile Include="IOperationLogService.cs" />
+    <Compile Include="IOrderInfoService.cs" />
     <Compile Include="IPayService.cs" />
+    <Compile Include="ISchemeService.cs" />
+    <Compile Include="ISignupService.cs" />
     <Compile Include="ISysUserIPService.cs" />
     <Compile Include="ISysDepartmentService.cs" />
     <Compile Include="Impl\SysDepartmentService.cs" />

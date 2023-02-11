@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Zk.HotelPlatform.DBProvider.Migrations;
 using Zk.HotelPlatform.Model;
 using Zk.HotelPlatform.Utils.Decimal;
 
@@ -45,6 +38,10 @@ namespace Zk.HotelPlatform.DBProvider.Base
             modelBuilder.Entity<SysUserGroupModule>();
             modelBuilder.Entity<SysUserGroupUser>();
             modelBuilder.Entity<WeChatUserBind>();
+            modelBuilder.Entity<Scheme>();
+            modelBuilder.Entity<Course>();
+            modelBuilder.Entity<Signup>();
+            modelBuilder.Entity<OrderInfo>();
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
             base.OnModelCreating(modelBuilder);
