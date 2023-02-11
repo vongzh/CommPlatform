@@ -528,7 +528,7 @@
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\Order1Controller.cs" />
     <Compile Include="Controllers\SysController.cs" />
     <Compile Include="Controllers\ThrottleController.cs" />
     <Compile Include="Controllers\WeChatController.cs" />
