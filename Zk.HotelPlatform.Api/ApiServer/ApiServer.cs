@@ -38,7 +38,7 @@ namespace Zk.HotelPlatform.Api
                     //StartupThrottling.Instance.InitThrottlePolicy(app, StartupAutofac.Instance.Container);
 
                     //WeChat
-                    //StartupWeChat.Instance.ConfigureWebChat(app);
+                    StartupWeChat.Instance.ConfigureWebChat(app);
 
 #if DEBUG
                     //Swagger

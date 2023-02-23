@@ -19,6 +19,10 @@ namespace Zk.HotelPlatform.Model
         [StringLength(50)]
         public string Email { get; set; }
 
+        public string OpenId { get; set; }
+
+        public string Phone { get; set; }
+
         [StringLength(50)]
         public string Educational { get; set; }
 
