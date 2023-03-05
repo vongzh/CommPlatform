@@ -42,5 +42,9 @@ namespace Zk.HotelPlatform.Model
         public DateTime? ModifyTime { get; set; }
         public string OpenId { get; set; }
         public int Periods { get; set; }
+
+        public string TransactionId { get; set; }
+
+        public DateTime? PayableTime { get; set; }
     }
 }

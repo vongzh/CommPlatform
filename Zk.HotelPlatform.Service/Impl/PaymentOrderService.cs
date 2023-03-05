@@ -17,13 +17,14 @@ using Zk.HotelPlatform.Utils.Log;
 using TencentCloud.Tbaas.V20180416.Models;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
 using TencentCloud.Cpdp.V20190820.Models;
+using Senparc.Weixin.MP.AdvancedAPIs.MerChant;
 
 namespace Zk.HotelPlatform.Service.Impl
 {
     public class PaymentOrderService : DataService<PaymentOrder>, IPaymentOrderService
     {
         private readonly IMapper _mapper = null;
-        private readonly TencentPayService tencentPayService = null;
+        private readonly TencentPayService _tencentPayService = null;
 
         public IOrderInfoService OrderInfoService { get; set; }
 
@@ -33,7 +34,7 @@ namespace Zk.HotelPlatform.Service.Impl
             : base(dataProvider)
         {
             _mapper = mapper;
-            tencentPayService = new TencentPayService();
+            _tencentPayService = new TencentPayService();
         }
 
         /// <summary>
@@ -90,7 +91,48 @@ namespace Zk.HotelPlatform.Service.Impl
                 Amount = new CreatePayTransactionJsapiRequest.Types.Amount() { Total = totalAmount.Value },
                 Payer = new CreatePayTransactionJsapiRequest.Types.Payer() { OpenId = orderInfo.OpenId }
             };
-            return await tencentPayService.CreateOrderByJsApi(requestData);
+            return await _tencentPayService.CreateOrderByJsApi(requestData);
+        }
+
+        /// <summary>
+        /// 腾讯支付回调
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> TenpayCallback(string timestamp, string nonce, string content, string signature, string serialNumber)
+        {
+            var transcationResource = await _tencentPayService.PaymentCallBack(timestamp, nonce, content, signature, serialNumber);
+            if (transcationResource == null) return false;
+
+            var paymentOrders = base.Select(x => x.PaymentSerialNo == transcationResource.OutTradeNumber).ToList();
+
+            var orderNo = paymentOrders.FirstOrDefault().OrderNo;
+            var orderInfo = OrderInfoService.GetOrderInfo(orderNo);
+            if (orderInfo == null)
+                throw new BusinessException("订单不存在");
+
+            if (transcationResource.TradeState == "SUCCESS")
+            {
+                foreach (var paymentOrder in paymentOrders)
+                {
+                    paymentOrder.TransactionId = transcationResource.TransactionId;
+                    paymentOrder.PaymentStatus = (int)PartalEnum.PaymentOrderStatus.PAIED;
+                    paymentOrder.PaymentTime = transcationResource.SuccessTime.LocalDateTime;
+                }
+                UpdateAll(paymentOrders);
+
+                {
+                    orderInfo.PaymentAmount += paymentOrders.Sum(x => x.TotalAmount);
+                    orderInfo.PaymentServiceAmount += paymentOrders.Sum(x => x.ServiceAmount);
+                    orderInfo.SchemePayNum += paymentOrders.Count;
+                    if (orderInfo.SchemePayNum == orderInfo.SchemeNum)
+                        orderInfo.Status = (int)PartalEnum.OrderStatus.COMPLATE;
+                    else
+                        orderInfo.Status = (int)PartalEnum.OrderStatus.PART_PAY;
+                    orderInfo.Status = orderInfo.Status;
+                    OrderInfoService.UpdatePayment(orderInfo);
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -116,16 +158,17 @@ namespace Zk.HotelPlatform.Service.Impl
                     paymentOrders.Add(new PaymentOrder()
                     {
                         Periods = i,
-                        ClassAmount = orderInfo.Price,
+                        ClassAmount = orderInfo.Price / orderInfo.SchemeNum,
                         CreateTime = DateTime.Now,
                         IsDelete = (int)GlobalEnum.YESOrNO.N,
                         OrderNo = orderInfo.OrderNo,
                         UserId = orderInfo.UserId,
-                        TotalAmount = orderInfo.PaymentAmount,
+                        TotalAmount = orderInfo.TotalAmount / orderInfo.SchemeNum,
                         PaymentNo = paymentOrderNo.PadTo().ToString(),
                         OpenId = orderInfo.OpenId,
                         PaymentStatus = (int)PartalEnum.PaymentOrderStatus.WAIT_PAY,
-                        ServiceAmount = orderInfo.PaymentServiceAmount,
+                        ServiceAmount = orderInfo.TotalServiceAmount / orderInfo.SchemeNum,
+                        PayableTime = DateTime.Now.AddMonths(i)
                     });
                 }
                 base.InsertAll(paymentOrders);

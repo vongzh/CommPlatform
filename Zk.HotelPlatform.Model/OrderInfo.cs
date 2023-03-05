@@ -41,7 +41,7 @@ namespace Zk.HotelPlatform.Model
         public int? PaymentAmount { get; set; }
 
         public DateTime BeginClassTime { get; set; }
-        public int PaymentServiceAmount { get; set; }
+        public int? PaymentServiceAmount { get; set; }
         public int TotalServiceAmount { get; set; }
         public string OpenId { get; set; }
     }

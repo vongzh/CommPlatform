@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
-using Senparc.NeuChar.NeuralSystems;
-using Senparc.Weixin.Entities;
+﻿using Senparc.Weixin.Entities;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3;
+using SKIT.FlurlHttpClient.Wechat.TenpayV3.Events;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3.Settings;
 using System;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web.Configuration;
-using Zk.HotelPlatform.Model;
 using Zk.HotelPlatform.Utils;
 using static SKIT.FlurlHttpClient.Wechat.TenpayV3.Models.CreateApplyForSubMerchantApplymentRequest.Types.Business.Types.SaleScene.Types;
 
@@ -48,6 +45,29 @@ namespace Zk.HotelPlatform.Service.Impl
                 throw new BusinessException($"状态码:{resData.RawStatus},错误代码:{resData.ErrorCode},错误描述:{resData.ErrorMessage}");
 
             return client.GenerateParametersForJsapiPayRequest(senparcWeixinSetting.WeixinAppId, resData.PrepayId);
+        }
+
+        public async Task<TransactionResource> PaymentCallBack(string timestamp, string nonce, string content, string signature, string serialNumber)
+        {
+            bool valid = client.VerifyEventSignature(
+                 callbackTimestamp: timestamp,
+                 callbackNonce: nonce,
+                 callbackBody: content,
+                 callbackSignature: signature,
+                 callbackSerialNumber: serialNumber, out Exception ex
+             );
+            if (!valid) throw new BusinessException("验签失败");
+
+            var callbackModel = client.DeserializeEvent(content);
+            switch (callbackModel.EventType?.ToUpper())
+            {
+                case "TRANSACTION.SUCCESS":
+                    {
+                        return client.DecryptEventResource<TransactionResource>(callbackModel);
+                    }
+                default:
+                    throw new BusinessException("未知的通知类型");
+            }
         }
     }
 

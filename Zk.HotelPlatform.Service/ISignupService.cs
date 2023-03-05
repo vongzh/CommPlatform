@@ -7,7 +7,7 @@ using Zk.HotelPlatform.Model;
 
 namespace Zk.HotelPlatform.Service
 {
-    public interface ISignupService
+    public interface ISignupService : IDataService<Signup>
     {
         bool SaveSignup(Signup signup);
     }

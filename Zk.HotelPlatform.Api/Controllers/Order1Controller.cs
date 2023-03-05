@@ -1,14 +1,20 @@
-﻿using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
+﻿using Nest;
+using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using TencentCloud.Cpdp.V20190820.Models;
 using Zk.HotelPlatform.Api.Filters;
 using Zk.HotelPlatform.Model;
 using Zk.HotelPlatform.Model.Basic.Pager;
 using Zk.HotelPlatform.Model.Request;
 using Zk.HotelPlatform.Service;
+using Zk.HotelPlatform.Utils.Log;
 using CreateOrderRequest = Zk.HotelPlatform.Model.Request.CreateOrderRequest;
 using QueryOrderRequest = Zk.HotelPlatform.Model.Request.QueryOrderRequest;
 
@@ -22,10 +28,13 @@ namespace Zk.HotelPlatform.Api.Controllers
     {
         private readonly IOrderInfoService _orderInfoService = null;
         private readonly IPaymentOrderService _paymentOrderService = null;
-        public Order1Controller(IPaymentOrderService paymentOrderService, IOrderInfoService orderInfoService)
+        private readonly ISignupService _signupService = null;
+
+        public Order1Controller(ISignupService signupService, IPaymentOrderService paymentOrderService, IOrderInfoService orderInfoService)
         {
             _orderInfoService = orderInfoService;
             _paymentOrderService = paymentOrderService;
+            _signupService = signupService;
         }
 
         [HttpPost]
@@ -45,6 +54,14 @@ namespace Zk.HotelPlatform.Api.Controllers
         public OrderInfo GetOrder(string orderNo)
         {
             return this._orderInfoService.GetOrderInfo(orderNo);
+        }
+
+        [HttpPost]
+        [SysAuthorize]
+        [Route("Signup/Get")]
+        public Signup GetSignup(int userId)
+        {
+            return _signupService.Get(x => x.Id == userId);
         }
 
         [HttpPost]
@@ -96,6 +113,51 @@ namespace Zk.HotelPlatform.Api.Controllers
         public async Task<IDictionary<string, string>> Payment([FromBody] string[] paymentOrderNos, [FromUri] string openId)
         {
             return await _paymentOrderService.Payment(paymentOrderNos, openId);
+        }
+
+        [Route("Payment/TenpayCallback")]
+        [HttpPost]
+        public async Task<dynamic> TenpayCallback()
+        {
+            try
+            {
+                string timestamp = Request.Headers.TryGetValues("Wechatpay-Timestamp", out _) ? Request.Headers.GetValues("Wechatpay-Timestamp").First() : null;
+                string nonce = Request.Headers.TryGetValues("Wechatpay-Nonce", out _) ? Request.Headers.GetValues("Wechatpay-Nonce").First() : null;
+                string signature = Request.Headers.TryGetValues("Wechatpay-Signature", out _) ? Request.Headers.GetValues("Wechatpay-Signature").First() : null;
+                string serialNumber = Request.Headers.TryGetValues("Wechatpay-Serial", out _) ? Request.Headers.GetValues("Wechatpay-Serial").First() : null;
+
+                using (var stream = await Request.Content.ReadAsStreamAsync())
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    string content = await reader.ReadToEndAsync();
+
+                    {
+                        LogInfoWriter.GetInstance().Warn($"{timestamp}\r\n{nonce}\r\n{signature}\r\n{serialNumber}\r\n{content}");
+                    }
+
+                    var ret = await _paymentOrderService.TenpayCallback(timestamp, nonce, content, signature, serialNumber);
+                    if (ret)
+                        return new
+                        {
+                            code = "SUCCESS",
+                            message = "成功"
+                        };
+                    else
+                        return new
+                        {
+                            code = "FAIL",
+                            message = "失败"
+                        };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    code = "FAIL",
+                    message = ex.Message
+                };
+            }
         }
     }
 }

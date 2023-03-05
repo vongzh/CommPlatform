@@ -9,5 +9,6 @@ namespace Zk.HotelPlatform.Service
         bool CerateOrder(CreateOrderRequest createOrderRequest);
         OrderInfo GetOrderInfo(string orderNo);
         PageResult<OrderInfo> QueryOrders(QueryOrderRequest queryRequest);
+        bool UpdatePayment(OrderInfo orderInfo);
     }
 }

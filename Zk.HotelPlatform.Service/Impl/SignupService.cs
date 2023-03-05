@@ -12,6 +12,7 @@ namespace Zk.HotelPlatform.Service.Impl
 
         }
 
+
         public bool SaveSignup(Signup signup)
         {
             if (signup.Id <= 0)

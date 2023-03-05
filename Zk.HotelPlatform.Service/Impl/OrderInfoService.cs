@@ -28,11 +28,21 @@ namespace Zk.HotelPlatform.Service.Impl
             _paymentOrderService = paymentOrderService;
         }
 
+        /// <summary>
+        /// 查询订单
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
         public OrderInfo GetOrderInfo(string orderNo)
         {
             return base.Get(x => x.OrderNo == orderNo);
         }
 
+        /// <summary>
+        /// 查询订单列表
+        /// </summary>
+        /// <param name="queryRequest"></param>
+        /// <returns></returns>
         public PageResult<OrderInfo> QueryOrders(QueryOrderRequest queryRequest)
         {
             Expression<Func<OrderInfo, bool>> filter = x => x.Id > 0;
@@ -65,6 +75,13 @@ namespace Zk.HotelPlatform.Service.Impl
             };
         }
 
+        /// <summary>
+        /// 创建订单
+        /// </summary>
+        /// <param name="createOrderRequest"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public bool CerateOrder(CreateOrderRequest createOrderRequest)
         {
             var course = _courseService.GetCourse(createOrderRequest.CourseId);
@@ -73,6 +90,10 @@ namespace Zk.HotelPlatform.Service.Impl
             var scheme = _schemeService.GetScheme(createOrderRequest.SchemeId);
             if (scheme == null)
                 throw new BusinessException("未找到方案信息");
+
+            var o = base.Get(x => x.OpenId == createOrderRequest.Signup.OpenId);
+            if (o != null)
+                throw new BusinessException("已经报过名了");
 
             var signupInfo = createOrderRequest.Signup;
             if (!_signupService.SaveSignup(signupInfo))
@@ -91,10 +112,10 @@ namespace Zk.HotelPlatform.Service.Impl
                 SchemeNum = scheme.TotalNumber,
                 SchemePayNum = 0,
                 Status = (int)PartalEnum.OrderStatus.WAIT_PAY,
-                PaymentAmount = course.Price / scheme.TotalNumber,
-                PaymentServiceAmount = Convert.ToInt32(course.Price * scheme.ServiceRate),
-                TotalAmount = Convert.ToInt32(course.Price * (1 + scheme.ServiceRate)),
-                TotalServiceAmount = Convert.ToInt32(course.Price * scheme.ServiceRate) * scheme.TotalNumber,
+                PaymentAmount = 0,
+                PaymentServiceAmount = 0,
+                TotalAmount = Convert.ToInt32(course.Price * (1 + scheme.ServiceRate / 100)),
+                TotalServiceAmount = Convert.ToInt32(course.Price * (scheme.ServiceRate / 100)),
                 UserId = signupInfo.Id,
                 UserName = signupInfo.Name,
                 BeginClassTime = createOrderRequest.BeginClassTime,
@@ -115,6 +136,16 @@ namespace Zk.HotelPlatform.Service.Impl
             }
             else
                 throw new NotImplementedException();
+        }
+
+        public bool UpdatePayment(OrderInfo orderInfo) 
+        {
+            var order = Get(x => x.OrderNo == orderInfo.OrderNo);
+            order.PaymentAmount = orderInfo.PaymentAmount;
+            order.PaymentServiceAmount = orderInfo.PaymentServiceAmount;
+            order.SchemePayNum = orderInfo.SchemePayNum;
+            order.Status = orderInfo.Status;
+            return base.Update(order);
         }
     }
 }
