@@ -93,7 +93,7 @@ namespace Zk.HotelPlatform.Api.Controllers
 
         [HttpPost]
         [Route("Payment/Pay")]
-        public async Task<CreatePayTransactionJsapiResponse> Payment([FromBody] string[] paymentOrderNos, [FromUri] string openId)
+        public async Task<IDictionary<string, string>> Payment([FromBody] string[] paymentOrderNos, [FromUri] string openId)
         {
             return await _paymentOrderService.Payment(paymentOrderNos, openId);
         }

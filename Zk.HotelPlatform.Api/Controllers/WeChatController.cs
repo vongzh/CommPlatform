@@ -1,11 +1,14 @@
 ﻿using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
+using Senparc.Weixin.MP.Helpers;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Zk.HotelPlatform.Service;
+using static SKIT.FlurlHttpClient.Wechat.TenpayV3.Models.CreateApplyForSubMerchantApplymentRequest.Types.Business.Types.SaleScene.Types;
 
 namespace Zk.HotelPlatform.Api.Controllers
 {
@@ -44,6 +47,12 @@ namespace Zk.HotelPlatform.Api.Controllers
                 throw new System.Exception(result.errmsg);
 
             return result.openid;
+        }
+
+        [HttpGet]
+        public async Task<JsSdkUiPackage> JsSdk()
+        {
+            return await JSSDKHelper.GetJsSdkUiPackageAsync(_appId, _appSecret, Request.RequestUri.AbsoluteUri);
         }
     }
 }

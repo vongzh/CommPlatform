@@ -6,6 +6,7 @@ using SKIT.FlurlHttpClient.Wechat.TenpayV3;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
 using SKIT.FlurlHttpClient.Wechat.TenpayV3.Settings;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web.Configuration;
@@ -38,7 +39,7 @@ namespace Zk.HotelPlatform.Service.Impl
             });
         }
 
-        public async Task<CreatePayTransactionJsapiResponse> CreateOrderByJsApi(CreatePayTransactionJsapiRequest reqData)
+        public async Task<IDictionary<string,string>> CreateOrderByJsApi(CreatePayTransactionJsapiRequest reqData)
         {
             reqData.AppId = senparcWeixinSetting.WeixinAppId;
             reqData.NotifyUrl = tenpayOptions.NotifyUrl;
@@ -46,7 +47,7 @@ namespace Zk.HotelPlatform.Service.Impl
             if (!resData.IsSuccessful())
                 throw new BusinessException($"状态码:{resData.RawStatus},错误代码:{resData.ErrorCode},错误描述:{resData.ErrorMessage}");
 
-            return resData;
+            return client.GenerateParametersForJsapiPayRequest(senparcWeixinSetting.WeixinAppId, resData.PrepayId);
         }
     }
 

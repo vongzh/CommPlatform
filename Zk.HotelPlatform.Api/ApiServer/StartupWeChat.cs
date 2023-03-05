@@ -45,7 +45,9 @@ namespace Zk.HotelPlatform.Api
             var senparcWeixinSetting = SenparcWeixinSetting.BuildFromWebConfig(isDebug);
             register.UseSenparcWeixin(senparcWeixinSetting, senparcSetting)
 
-                .RegisterMpAccount(senparcWeixinSetting);
+                .RegisterMpAccount(senparcWeixinSetting)
+
+                .RegisterMpJsApiTicket(senparcWeixinSetting.WeixinAppId, senparcWeixinSetting.WeixinAppSecret, "轻易学付");
         }
     }
 }

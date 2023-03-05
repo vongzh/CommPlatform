@@ -56,7 +56,7 @@ namespace Zk.HotelPlatform.Service.Impl
         /// 支付
         /// </summary>
         /// <returns></returns>
-        public async Task<CreatePayTransactionJsapiResponse> Payment(string[] paymentNos, string openId)
+        public async Task<IDictionary<string, string>> Payment(string[] paymentNos, string openId)
         {
             Expression<Func<PaymentOrder, bool>> filter = x => x.OpenId == openId;
             if (paymentNos != null && paymentNos.Length > 0)
@@ -70,7 +70,7 @@ namespace Zk.HotelPlatform.Service.Impl
 
             var orderNo = paymentOrders.FirstOrDefault().OrderNo;
             var orderInfo = OrderInfoService.GetOrderInfo(orderNo);
-            if (orderInfo == null) 
+            if (orderInfo == null)
                 throw new BusinessException("订单不存在");
 
             var serialNo = $"{DateTime.Now.Ticks}{openId.Substring(0, 4)}";
@@ -110,7 +110,7 @@ namespace Zk.HotelPlatform.Service.Impl
                     throw new OuterBusinessException("订单已经完成");
 
                 var paymentOrders = new List<PaymentOrder>();
-                for (int i = 0; i < orderInfo.SchemeNum; i++)
+                for (int i = 1; i <= orderInfo.SchemeNum; i++)
                 {
                     var paymentOrderNo = GetSequence(_sequenceName);
                     paymentOrders.Add(new PaymentOrder()

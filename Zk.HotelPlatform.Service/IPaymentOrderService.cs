@@ -12,6 +12,6 @@ namespace Zk.HotelPlatform.Service
     {
         void CreatePaymentOrders(OrderInfo orderInfo);
         IEnumerable<PaymentOrder> GetPaymentOrders(string orderNo, string openId);
-        Task<CreatePayTransactionJsapiResponse> Payment(string[] paymentNos, string openId);
+        Task<IDictionary<string, string>> Payment(string[] paymentNos, string openId);
     }
 }
