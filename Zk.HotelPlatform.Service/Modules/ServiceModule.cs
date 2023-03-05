@@ -12,7 +12,10 @@ namespace Zk.HotelPlatform.Service.Modules
 
             builder.RegisterType<CourseService>().As<ICourseService>().SingleInstance();
             builder.RegisterType<SignupService>().As<ISignupService>().SingleInstance();
-            builder.RegisterType<OrderInfoService>().As<IOrderInfoService>().SingleInstance();
+            builder.RegisterType<OrderInfoService>().As<IOrderInfoService>().SingleInstance()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies); ;
+            builder.RegisterType<PaymentOrderService>().As<IPaymentOrderService>().SingleInstance()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies); ;
             builder.RegisterType<SchemeService>().As<ISchemeService>().SingleInstance();
             builder.RegisterType<ThrottleService>().As<IThrottleService>().SingleInstance();
 

@@ -1,10 +1,16 @@
-﻿using System;
+﻿using SKIT.FlurlHttpClient.Wechat.TenpayV3.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
+using TencentCloud.Cpdp.V20190820.Models;
 using Zk.HotelPlatform.Api.Filters;
 using Zk.HotelPlatform.Model;
 using Zk.HotelPlatform.Model.Basic.Pager;
 using Zk.HotelPlatform.Model.Request;
 using Zk.HotelPlatform.Service;
+using CreateOrderRequest = Zk.HotelPlatform.Model.Request.CreateOrderRequest;
+using QueryOrderRequest = Zk.HotelPlatform.Model.Request.QueryOrderRequest;
 
 namespace Zk.HotelPlatform.Api.Controllers
 {
@@ -15,9 +21,11 @@ namespace Zk.HotelPlatform.Api.Controllers
     public class Order1Controller : BaseController
     {
         private readonly IOrderInfoService _orderInfoService = null;
-        public Order1Controller(IOrderInfoService orderInfoService)
+        private readonly IPaymentOrderService _paymentOrderService = null;
+        public Order1Controller(IPaymentOrderService paymentOrderService, IOrderInfoService orderInfoService)
         {
             _orderInfoService = orderInfoService;
+            _paymentOrderService = paymentOrderService;
         }
 
         [HttpPost]
@@ -27,7 +35,7 @@ namespace Zk.HotelPlatform.Api.Controllers
         {
             if (queryOrderRequest == null)
                 queryOrderRequest = new QueryOrderRequest();
-            
+
             return this._orderInfoService.QueryOrders(queryOrderRequest);
         }
 
@@ -41,7 +49,7 @@ namespace Zk.HotelPlatform.Api.Controllers
 
         [HttpPost]
         [Route("Order1/Create")]
-        public bool CerateOrder(CreateOrderRequest createOrderRequest)
+        public bool CerateOrder([FromUri] string openId, [FromBody] CreateOrderRequest createOrderRequest)
         {
             if (createOrderRequest.Signup == null)
                 throw new ArgumentException(nameof(createOrderRequest.Signup));
@@ -68,9 +76,26 @@ namespace Zk.HotelPlatform.Api.Controllers
                 throw new ArgumentException(nameof(createOrderRequest.CourseId));
             if (createOrderRequest.SchemeId <= 0)
                 throw new ArgumentException(nameof(createOrderRequest.SchemeId));
-            if (createOrderRequest.BeginClassTime <= DateTime.Now)
-                throw new ArgumentException(nameof(createOrderRequest.BeginClassTime));
+
+            if (string.IsNullOrWhiteSpace(createOrderRequest.Signup.OpenId))
+            {
+                createOrderRequest.Signup.OpenId = openId;
+            }
             return _orderInfoService.CerateOrder(createOrderRequest);
+        }
+
+        [HttpPost]
+        [Route("Payment/GetPaymentOrders")]
+        public IEnumerable<PaymentOrder> GetPaymentOrders([FromUri] string orderNo, [FromUri] string openId)
+        {
+            return _paymentOrderService.GetPaymentOrders(orderNo, openId);
+        }
+
+        [HttpPost]
+        [Route("Payment/Pay")]
+        public async Task<CreatePayTransactionJsapiResponse> Payment([FromBody] string[] paymentOrderNos, [FromUri] string openId)
+        {
+            return await _paymentOrderService.Payment(paymentOrderNos, openId);
         }
     }
 }

@@ -106,6 +106,12 @@
     <Reference Include="FluentFTP, Version=45.1.0.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentFTP.45.1.0\lib\net472\FluentFTP.dll</HintPath>
     </Reference>
+    <Reference Include="Flurl, Version=3.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.3.0.6\lib\net472\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=3.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.3.2.4\lib\net472\Flurl.Http.dll</HintPath>
+    </Reference>
     <Reference Include="Hangfire.Console, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Console.1.4.2\lib\net45\Hangfire.Console.dll</HintPath>
     </Reference>
@@ -293,6 +299,12 @@
     </Reference>
     <Reference Include="Senparc.Weixin.Work, Version=3.15.15.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.Work.3.15.15\lib\net462\Senparc.Weixin.Work.dll</HintPath>
+    </Reference>
+    <Reference Include="SKIT.FlurlHttpClient.Common, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SKIT.FlurlHttpClient.Common.2.6.0\lib\net461\SKIT.FlurlHttpClient.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SKIT.FlurlHttpClient.Wechat.TenpayV3, Version=2.15.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SKIT.FlurlHttpClient.Wechat.TenpayV3.2.15.2\lib\net47\SKIT.FlurlHttpClient.Wechat.TenpayV3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -525,12 +537,14 @@
     <Compile Include="Impl\MainService.cs" />
     <Compile Include="Impl\OperationLogService.cs" />
     <Compile Include="Impl\OrderInfoService.cs" />
+    <Compile Include="Impl\PaymentOrderService.cs" />
     <Compile Include="Impl\SchemeService.cs" />
     <Compile Include="Impl\SignupService.cs" />
     <Compile Include="Impl\SysUserIPService.cs" />
     <Compile Include="Hub\MessageHub.cs" />
     <Compile Include="IOperationLogService.cs" />
     <Compile Include="IOrderInfoService.cs" />
+    <Compile Include="IPaymentOrderService.cs" />
     <Compile Include="IPayService.cs" />
     <Compile Include="ISchemeService.cs" />
     <Compile Include="ISignupService.cs" />

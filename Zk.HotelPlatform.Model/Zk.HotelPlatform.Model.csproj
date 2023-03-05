@@ -79,6 +79,7 @@
     <Compile Include="LoginLog.cs" />
     <Compile Include="OperationLog.cs" />
     <Compile Include="OrderInfo.cs" />
+    <Compile Include="PaymentOrder.cs" />
     <Compile Include="Request\CourseQueryRequest.cs" />
     <Compile Include="Request\CreateOrderRequest.cs" />
     <Compile Include="Request\QueryOrderRequest.cs" />

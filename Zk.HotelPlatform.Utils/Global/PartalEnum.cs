@@ -20,5 +20,14 @@ namespace Zk.HotelPlatform.Utils.Global
             [Description("已完成")]
             COMPLATE = 10
         }
+
+        public enum PaymentOrderStatus
+        {
+            [Description("待支付")]
+            WAIT_PAY = 0,
+
+            [Description("已支付")]
+            PAIED = 5,
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace Zk.HotelPlatform.DBProvider.Base
             modelBuilder.Entity<Course>();
             modelBuilder.Entity<Signup>();
             modelBuilder.Entity<OrderInfo>();
+            modelBuilder.Entity<PaymentOrder>();
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
             base.OnModelCreating(modelBuilder);

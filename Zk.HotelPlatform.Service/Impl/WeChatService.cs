@@ -15,7 +15,7 @@ namespace Zk.HotelPlatform.Service.Impl
 {
     public class WeChatService : DataService<WeChatUserBind>, IWeChatService
     {
-        private SenparcWeixinSetting senparcWeixinSetting = SenparcWeixinSetting.BuildFromWebConfig(false);
+        private readonly SenparcWeixinSetting senparcWeixinSetting = SenparcWeixinSetting.BuildFromWebConfig(false);
 
         public WeChatService(IDataProvider<WeChatUserBind> dataProvider)
              : base(dataProvider)

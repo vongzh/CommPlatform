@@ -18,12 +18,14 @@ namespace Zk.HotelPlatform.Service.Impl
         private readonly ISignupService _signupService = null;
         private readonly ICourseService _courseService = null;
         private readonly ISchemeService _schemeService = null;
+        private readonly IPaymentOrderService _paymentOrderService = null;
 
-        public OrderInfoService(ICourseService courseService, ISchemeService schemeService, ISignupService signupService, IDataProvider<OrderInfo> dataProvider) : base(dataProvider)
+        public OrderInfoService(IPaymentOrderService paymentOrderService,ICourseService courseService, ISchemeService schemeService, ISignupService signupService, IDataProvider<OrderInfo> dataProvider) : base(dataProvider)
         {
             this._signupService = signupService;
             this._courseService = courseService;
             this._schemeService = schemeService;
+            _paymentOrderService = paymentOrderService;
         }
 
         public OrderInfo GetOrderInfo(string orderNo)
@@ -89,21 +91,27 @@ namespace Zk.HotelPlatform.Service.Impl
                 SchemeNum = scheme.TotalNumber,
                 SchemePayNum = 0,
                 Status = (int)PartalEnum.OrderStatus.WAIT_PAY,
-                PaymentAmount = 0,
-                PaymentServiceAmount = 0,
+                PaymentAmount = course.Price / scheme.TotalNumber,
+                PaymentServiceAmount = Convert.ToInt32(course.Price * scheme.ServiceRate),
                 TotalAmount = Convert.ToInt32(course.Price * (1 + scheme.ServiceRate)),
-                TotalServiceAmount = Convert.ToInt32(course.Price * scheme.ServiceRate),
+                TotalServiceAmount = Convert.ToInt32(course.Price * scheme.ServiceRate) * scheme.TotalNumber,
                 UserId = signupInfo.Id,
                 UserName = signupInfo.Name,
                 BeginClassTime = createOrderRequest.BeginClassTime,
+                OpenId = signupInfo.OpenId
             };
 
             if (orderInfo.Id <= 0)
             {
                 orderInfo.CreateTime = DateTime.Now;
                 orderInfo.IsDelete = (int)GlobalEnum.YESOrNO.N;
-                var entity = base.AddAndGetEntity(orderInfo);
-                return entity != null && entity.Id > 0;
+                var entity = AddAndGetEntity(orderInfo);
+
+                var ret = entity != null && entity.Id > 0;
+                if (ret)
+                    _paymentOrderService.CreatePaymentOrders(orderInfo);
+
+                return ret;
             }
             else
                 throw new NotImplementedException();
